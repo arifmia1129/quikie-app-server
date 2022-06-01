@@ -19,7 +19,11 @@ async function run() {
     try {
         await client.connect();
         const collection = client.db("allStock").collection("stock");
-
+        app.get("/stock", async (req, res) => {
+            const query = {};
+            const result = await collection.find(query).toArray();
+            res.send(result);
+        })
         app.post("/stock", async (req, res) => {
             const doc = req.body;
             const result = await collection.insertOne(doc);
