@@ -24,9 +24,21 @@ async function run() {
             const result = await collection.find(query).toArray();
             res.send(result);
         })
-        app.post("/stock", async (req, res) => {
+        app.put("/stock", async (req, res) => {
             const doc = req.body;
-            const result = await collection.insertOne(doc);
+            const filter = { id: doc?.id };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: doc
+            };
+            const result = await collection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        })
+        app.delete("/stock/:id", async (req, res) => {
+            const id = req.params.id;
+            console.log(id);
+            const query = { id };
+            const result = await collection.deleteOne(query);
             res.send(result);
         })
     } finally {
